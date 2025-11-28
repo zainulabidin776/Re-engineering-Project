@@ -22,10 +22,10 @@ try {
     $loginResponse = Invoke-RestMethod -Uri "$BaseUrl/auth/login" -Method Post -Body $loginBody -ContentType "application/json"
     $Token = $loginResponse.token
     $EmployeeId = $loginResponse.employeeId
-    Write-Host "✓ Login successful" -ForegroundColor Green
+    Write-Host "Login successful" -ForegroundColor Green
     Write-Host "  Token: $($Token.Substring(0, [Math]::Min(20, $Token.Length)))..." -ForegroundColor Green
 } catch {
-    Write-Host "✗ Login failed: $_" -ForegroundColor Red
+    Write-Host "Login failed: $_" -ForegroundColor Red
     exit 1
 }
 Write-Host ""
@@ -39,9 +39,9 @@ try {
         "X-Employee-Id" = $EmployeeId
     }
     $items = Invoke-RestMethod -Uri "$BaseUrl/items" -Method Get -Headers $headers
-    Write-Host "✓ Retrieved $($items.Count) items" -ForegroundColor Green
+    Write-Host "Retrieved $($items.Count) items" -ForegroundColor Green
 } catch {
-    Write-Host "✗ Failed to get items: $_" -ForegroundColor Red
+    Write-Host "Failed to get items: $_" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -57,11 +57,11 @@ try {
     } | ConvertTo-Json
 
     $sale = Invoke-RestMethod -Uri "$BaseUrl/sales" -Method Post -Body $saleBody -ContentType "application/json" -Headers $headers
-    Write-Host "✓ Sale processed successfully" -ForegroundColor Green
+    Write-Host "Sale processed successfully" -ForegroundColor Green
     Write-Host "  Sale ID: $($sale.id)" -ForegroundColor Green
     Write-Host "  Total: $($sale.finalTotal)" -ForegroundColor Green
 } catch {
-    Write-Host "✗ Sale failed: $_" -ForegroundColor Red
+    Write-Host "Sale failed: $_" -ForegroundColor Red
     Write-Host "  Note: Make sure item with ID 1001 exists" -ForegroundColor Yellow
 }
 Write-Host ""
@@ -79,10 +79,10 @@ try {
     } | ConvertTo-Json
 
     $rental = Invoke-RestMethod -Uri "$BaseUrl/rentals" -Method Post -Body $rentalBody -ContentType "application/json" -Headers $headers
-    Write-Host "✓ Rental processed successfully" -ForegroundColor Green
+    Write-Host "Rental processed successfully" -ForegroundColor Green
     Write-Host "  Rental ID: $($rental.id)" -ForegroundColor Green
 } catch {
-    Write-Host "✗ Rental failed: $_" -ForegroundColor Red
+    Write-Host "Rental failed: $_" -ForegroundColor Red
     Write-Host "  Note: Make sure item with ID 2001 exists" -ForegroundColor Yellow
 }
 Write-Host ""
@@ -92,13 +92,12 @@ Write-Host "Test 5: Get Outstanding Rentals" -ForegroundColor Yellow
 Write-Host "-------------------" -ForegroundColor Yellow
 try {
     $outstanding = Invoke-RestMethod -Uri "$BaseUrl/rentals/outstanding/5551234567" -Method Get -Headers $headers
-    Write-Host "✓ Retrieved $($outstanding.Count) outstanding rentals" -ForegroundColor Green
+    Write-Host "Retrieved $($outstanding.Count) outstanding rentals" -ForegroundColor Green
 } catch {
-    Write-Host "✗ Failed to get outstanding rentals: $_" -ForegroundColor Red
+    Write-Host "Failed to get outstanding rentals: $_" -ForegroundColor Red
 }
 Write-Host ""
 
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "Integration Tests Complete" -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
-
