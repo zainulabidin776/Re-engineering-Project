@@ -33,7 +33,7 @@ public class InventoryService {
     }
     
     public List<Item> getLowStockItems(int threshold) {
-        return itemRepository.findByQuantityLessThanOrEqual(threshold);
+        return itemRepository.findByQuantityLessThanEqual(threshold);
     }
     
     @Transactional

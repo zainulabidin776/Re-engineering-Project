@@ -12,7 +12,7 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, UUID> {
     Optional<Item> findByItemId(Integer itemId);
     List<Item> findByQuantityGreaterThan(int minQuantity);
-    List<Item> findByQuantityLessThanOrEqual(int maxQuantity);
+    List<Item> findByQuantityLessThanEqual(int maxQuantity);
     List<Item> findByNameContainingIgnoreCase(String name);
 }
 
