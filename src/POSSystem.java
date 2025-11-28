@@ -7,11 +7,11 @@ import java.io.FileNotFoundException;
 
 public class POSSystem{
   public boolean unixOS = true; 
-  public static String employeeDatabase = "Database/employeeDatabase.txt";
-  public static String rentalDatabaseFile = "Database/rentalDatabase.txt"; 
-  public static String itemDatabaseFile = "Database/itemDatabase.txt"; 
+  public static String employeeDatabase = Constants.EMPLOYEE_DATABASE;
+  public static String rentalDatabaseFile = Constants.RENTAL_DATABASE; 
+  public static String itemDatabaseFile = Constants.ITEM_DATABASE; 
   public List<Employee> employees = new ArrayList<Employee>();
-  DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+  DateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LONG);
   Calendar cal=null;
   private int index=-1;
   String username="";
@@ -19,7 +19,7 @@ public class POSSystem{
   String name="";
   
   private void readFile(){
-    if (System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+    if (SystemUtils.isWindows()){
       //unixOS = false; //commented out to support netbeans 
       //employeeDatabase = "..\\Database\\employeeDatabase.txt";
       //rentalDatabaseFile = "..\\Database\\rentalDatabase.txt"; 
@@ -59,15 +59,15 @@ public class POSSystem{
   
   private void logInToFile(String username,String name,String position,Calendar cal){
     try{
-      String temp = "Database/employeeLogfile.txt";
-      //if(System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+      String temp = Constants.EMPLOYEE_LOG_FILE;
+      //if(SystemUtils.isWindows()){
         //temp = "..\\Database\\employeeLogfile.txt";  //commented out to support netbeans
       //}
       FileWriter fw = new FileWriter(temp,true);
       BufferedWriter bw = new BufferedWriter(fw);
       String log=name+" ("+username+" "+position+") logs into POS System. Time: "+dateFormat.format(cal.getTime());
       bw.write(log);
-      bw.write(System.getProperty( "line.separator" ));
+      bw.write(SystemUtils.getLineSeparator());
       bw.close();
       if(position.equals("Admin")){
           
@@ -83,7 +83,7 @@ public class POSSystem{
   
   public boolean checkTemp()
   {
-   String temp = "Database/temp.txt";
+   String temp = Constants.TEMP_FILE;
    File f=new File(temp);
      if(f.exists() && !f.isDirectory())
       return true;
@@ -92,7 +92,7 @@ public class POSSystem{
   
   public String continueFromTemp(long phone)
   {
-     String temp = "Database/temp.txt";
+     String temp = Constants.TEMP_FILE;
      File f=new File(temp);
 
          try{
@@ -144,15 +144,15 @@ public class POSSystem{
   
   private void logOutToFile(String username,String name,String position,Calendar cal){
     try{
-      String temp = "Database/employeeLogfile.txt";
-      if(System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+      String temp = Constants.EMPLOYEE_LOG_FILE;
+      if(SystemUtils.isWindows()){
         //temp = "..\\Database\\employeeLogfile.txt"; 
       }
       FileWriter fw = new FileWriter(temp,true);
       BufferedWriter bw = new BufferedWriter(fw);
       String log=name+" ("+username+" "+position+") logs out of POS System. Time: "+dateFormat.format(cal.getTime());
       bw.write(log);
-      bw.write(System.getProperty( "line.separator" ));
+      bw.write(SystemUtils.getLineSeparator());
       bw.close();
       
     } catch (FileNotFoundException e) {
@@ -192,11 +192,11 @@ public class POSSystem{
            name=(employees.get(index)).getName();
           logInToFile((employees.get(index)).getUsername(),name,(employees.get(index)).getPosition(),cal);
           
-      if(((employees.get(index)).getPosition()).equals("Cashier")){
-        return 1;  //returns cashier status
+      if(((employees.get(index)).getPosition()).equals(Constants.POSITION_CASHIER)){
+        return Constants.LOGIN_CASHIER;  //returns cashier status
       }
-      else if(((employees.get(index)).getPosition()).equals("Admin")){
-        return 2; //returns admin status
+      else if(((employees.get(index)).getPosition()).equals(Constants.POSITION_ADMIN)){
+        return Constants.LOGIN_ADMIN; //returns admin status
       }  
      }
      }

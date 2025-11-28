@@ -5,24 +5,15 @@ import java.util.*;
 abstract class PointOfSale {
   //attributes
   public double totalPrice=0;
-  private static float discount = 0.90f;
+  private static float discount = Constants.COUPON_DISCOUNT;
   public boolean unixOS = true; 
-  public double tax=1.06;
+  public double tax=Constants.DEFAULT_TAX_RATE;
   
   public boolean returnSale=true;
   
-  //public static String rentalDatabaseFile = "../Database/rentalDatabase.txt"; 
-  public static String couponNumber = "Database/couponNumber.txt";
-  //determines the name of the databaseFile for sale
-  public static String tempFile="Database/temp.txt";
-  //detects windows OS, changes databaseFile string to use "\" protocol
-  /*if (System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
-   unixOS = false; 
-   couponNumber= "..\\Database\\couponNumber.txt"; 
-   rentalDatabaseFile = "..\\Database\\rentalDatabase.txt"; 
-   itemDatabaseFile = "..\\Database\\itemDatabase.txt";
-   tempFile="..\\Database\\temp.txt";
-   }*/
+  // File paths using constants
+  public static String couponNumber = Constants.COUPON_FILE;
+  public static String tempFile = Constants.TEMP_FILE;
   
   Inventory inventory = Inventory.getInstance();
   
@@ -175,7 +166,7 @@ abstract class PointOfSale {
       FileWriter fw = new FileWriter(tempFile,true);
       BufferedWriter bw = new BufferedWriter(fw);
       bw.write(id +" "+ amount);
-      bw.write(System.getProperty( "line.separator" ));
+      bw.write(SystemUtils.getLineSeparator());
       bw.close();
     }
     
@@ -214,7 +205,9 @@ abstract class PointOfSale {
   public double getTotal() {return totalPrice;}
   
   public void detectSystem(){
-    if (System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+    // OS detection consolidated in SystemUtils
+    // Note: File paths remain Unix-style for NetBeans compatibility
+    if (SystemUtils.isWindows()){
       //unixOS = false; //these lines are commented out for running on netbeans, which uses a linux protocol despite OS
       //couponNumber= "..\\Database\\couponNumber.txt"; 
       //tempFile="..\\Database\\temp.txt";
@@ -224,7 +217,7 @@ abstract class PointOfSale {
   public boolean creditCard(String card)
   {
 	  int length = card.length();
-	  if (length != 16)
+	  if (length != Constants.CREDIT_CARD_LENGTH)
 		  return false;
 	  int index = 0;
 	  while (index < length)

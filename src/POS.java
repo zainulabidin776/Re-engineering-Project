@@ -9,8 +9,8 @@ public class POS extends PointOfSale {
   
   public void deleteTempItem(int id){
     try{
-      String temp = "Database/newTemp.txt";
-      if(System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+      String temp = Constants.NEW_TEMP_FILE;
+      if(SystemUtils.isWindows()){
         //temp = "..\\Database\\newTemp.txt"; 
       }
       File tempF = new File(temp);
@@ -19,11 +19,11 @@ public class POS extends PointOfSale {
       BufferedWriter writer = new BufferedWriter(new FileWriter(tempF));
       String type= reader.readLine();
       writer.write(type);
-      writer.write(System.getProperty("line.separator"));
+      writer.write(SystemUtils.getLineSeparator());
       for (int i =0; i<transactionItem.size();i++){
         if (transactionItem.get(i).getItemID()!=id){
           writer.write(transactionItem.get(i).getItemID() +" "+ transactionItem.get(i).getAmount());
-          writer.write(System.getProperty( "line.separator" ));
+          writer.write(SystemUtils.getLineSeparator());
         }
       }
       fileR.close();
@@ -63,22 +63,22 @@ public class POS extends PointOfSale {
       if(bool==true){
     //invoice record file
     try{
-      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+      DateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_LONG);
   Calendar cal = Calendar.getInstance();
-      String t = "Database/saleInvoiceRecord.txt";
-      if(System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+      String t = Constants.SALE_INVOICE_RECORD;
+      if(SystemUtils.isWindows()){
         //t = "..\\Database\\saleInvoiceRecord.txt"; 
       }
       FileWriter fw2 = new FileWriter(t,true);
       BufferedWriter bw2 = new BufferedWriter(fw2);
       bw2.write(dateFormat.format(cal.getTime()));
-      bw2.write(System.getProperty( "line.separator" ));
+      bw2.write(SystemUtils.getLineSeparator());
       for(int i=0;i<transactionItem.size();i++){
        String log=Integer.toString(transactionItem.get(i).getItemID())+" "+transactionItem.get(i).getItemName()+" "+
                         Integer.toString(transactionItem.get(i).getAmount())+" "+
                         Double.toString(transactionItem.get(i).getPrice()*transactionItem.get(i).getAmount());
        bw2.write(log);
-      bw2.write(System.getProperty( "line.separator" ));
+      bw2.write(SystemUtils.getLineSeparator());
       }
       bw2.write("Total with tax: "+totalPrice);
       bw2.newLine();
