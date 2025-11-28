@@ -1,44 +1,95 @@
-SG Technologies POS System
-Alpha Release 
-CSE216 - Software Engineering
-Dec 9, 2015
+# SG Technologies POS System - Reengineering Project
 
-Overview:
+**Original System**: Alpha Release (CSE216 - Software Engineering, Dec 9, 2015)  
+**Reengineering Project**: Fall 2025 - Software Reengineering Course  
+**Status**: Code Restructuring Phase (30% Complete)
 
-This folder contains the final version of our Software Engineering project, a fully functioning and robust Point of Sale system.
-Project documentation and class submissions are in the Documentation directory
+## Project Overview
 
-Databases: CouponNumber, employeeDatabase,employee log file, itemDatabase,rentalDatabase,saleinvoiceRecord,userDatabase
+This repository contains the legacy SG Technologies POS system and its ongoing reengineering process. The project follows the Software Reengineering Process Model to transform the legacy desktop Java application into a modern web-based system.
 
-Source code:Employee.java, EmployeeManagement.java,HandleReturns.java,Inventory.java,Management.java, POH.java,PointOfSales.java,PointOfSalesTest.java, POR.java, POS.java,POSSystem.java,Register.java,ReturnItem.java,Sale.java
+## Current Status
 
-Tests: EmployeeManagementTest.java,EmployeeTest.java,HandReturn.java,POSSystemTest.java,POSTest.java
+### ‚úÖ Completed Phases
+1. **Inventory Analysis** - Asset catalog and classification complete
+2. **Document Restructuring** - Documentation reorganized and gaps identified
+3. **Reverse Engineering** - Architecture, code smells, and workflows documented
+4. **Code Restructuring** (30%) - 5 refactorings completed, improving maintainability
 
-Design Patterns: Singleton, Abstract Factory 
+### üîÑ In Progress
+- **Code Restructuring** - Continuing safe refactorings to improve code quality
 
-————————————————————————————————————————————————
+### ‚è≥ Planned Phases
+- **Data Restructuring** - Migrate from file-based to database storage
+- **Forward Engineering** - Build web-based system (Spring Boot + React)
 
-Source Codes:
-Employee.java - this class gets employee’s username, name, position, and password to the system, and set it in use if information are correct. 
+## Repository Structure
 
-EmployeeManagement.java - this class asks the employees to enter their authorization and determine their position. It also allows the user to to update the employee database. 
+```
+‚îú‚îÄ‚îÄ src/                    # Legacy Java source code
+‚îú‚îÄ‚îÄ tests/                  # Test files (JUnit)
+‚îú‚îÄ‚îÄ Database/               # Text-based database files
+‚îú‚îÄ‚îÄ Documentation/          # Original project documentation
+‚îú‚îÄ‚îÄ docs/                   # Reengineering documentation
+‚îÇ   ‚îú‚îÄ‚îÄ inventory-analysis.md
+‚îÇ   ‚îú‚îÄ‚îÄ reverse-engineering.md
+‚îÇ   ‚îú‚îÄ‚îÄ document-restructuring.md
+‚îÇ   ‚îú‚îÄ‚îÄ refactoring-log.md
+‚îÇ   ‚îî‚îÄ‚îÄ implementation-status.md
+‚îî‚îÄ‚îÄ pom.xml                 # Maven build configuration
+```
 
-HandleReturns.java - this class gets user’s information, (creates a new one if doesn’t exists),it will remove the item on the rented database file if the item is find. 
+## Quick Start
 
-Inventory.java - this class access inventory database and make updates accordingly. It uses singleton pattern which restricts instantiation of the class to one object.
+### Prerequisites
+- JDK 8+ (tested with JDK 25)
+- Maven 3.6+
 
-Item.java - this class contains get methods for the items on the database. 
+### Build and Test
+```bash
+mvn clean compile
+mvn test
+```
 
-Management.java - this class uses customer’s phone number to check if they exists in the database. If data can be found, returns the latest return date and check if they have outstanding returns. It also adds, updates rental information to the database.
+## Key Documentation
 
-POR.java, POS.java, POH.java, PointOfSale.java - Classes POR, POS, and POH extend abstract class PointOfSale. PointOfSales is the abstract class that gets factories for POR, POS, and POH. PointOfSale allows users to add item, enter item, remove unwanted items and calculates the total with tax. It also checks if the user has a coupon, and make reductions on the total accordingly. 
+- **[Implementation Status](docs/implementation-status.md)** - Current progress and phase completion
+- **[Reverse Engineering Analysis](docs/reverse-engineering.md)** - Architecture, code smells, workflows
+- **[Refactoring Log](docs/refactoring-log.md)** - All refactorings with before/after code
+- **[Inventory Analysis](docs/inventory-analysis.md)** - Asset catalog and classification
 
-POSSystem.java - this is the interface for our project. It has a Welcome and logIn function that checks the users’ status (cashier or admin) For cashier, it allows cashier to choose from sale, rental and return functions. For admins, it takes the admin to employee management and allow admins to add, delete, update the employee information.
+## Legacy System Features
 
-Rental.java - this class gets into the rental database, find the user in the database, or create an account if doesn’t exists. Then it allow users to add, remove rental items. 
+- **Sales**: Direct item sales with tax calculation
+- **Rentals**: Item rentals tracked by customer phone number
+- **Returns**: Processing returns for rented items
+- **Employee Management**: Admin functions for managing cashiers/admins
+- **Inventory Management**: Real-time inventory updates
 
-ReturnItem.java - finds the itemID in the DB and mark the return date. 
- 
-Sale.java - this class gets into the rental database, find the user in the database, or create an account if doesn’t exists. Then it allow users to add, remove rental items. 
+## Design Patterns Identified
 
+- **Singleton**: `Inventory` class
+- **Abstract Factory**: `PointOfSale` abstract class with POS/POR/POH implementations
+- **Template Method**: `PointOfSale` defines transaction skeleton
 
+## Technology Stack
+
+### Legacy (Current)
+- Java 8
+- Swing UI
+- File-based storage (.txt files)
+- Maven build system
+
+### Target (Planned)
+- **Backend**: Spring Boot (Java)
+- **Frontend**: React (TypeScript)
+- **Database**: PostgreSQL
+- **Testing**: JUnit, React Testing Library
+
+## Contributing
+
+This is a semester project following specific reengineering phases. See `docs/implementation-status.md` for current phase and next steps.
+
+## License
+
+Academic project - See original project documentation for details.
