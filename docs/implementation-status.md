@@ -113,45 +113,52 @@ This document tracks the progress of the Software Reengineering project for the 
 
 ---
 
-### ⏳ Phase 5: Data Restructuring (PENDING)
+### ✅ Phase 5: Data Restructuring (COMPLETED)
 
-**Status**: Not Started  
-**Planned Start**: After Code Restructuring
+**Status**: 100% Complete (Design Phase)  
+**Date Completed**: 2025-11-28
 
-**Planned Deliverables**:
-- Database schema design (PostgreSQL)
-- Data migration scripts
-- Repository pattern implementation
-- Data validation layer
+**Deliverables**:
+- ✅ `docs/data-restructuring.md` - Complete database design
+- ✅ `database/schema.sql` - PostgreSQL DDL with 11 tables
+- ✅ Normalized schema design
+- ✅ Migration strategy documented
+- ✅ Repository pattern interfaces defined
 
-**Target Schema**:
-- `customers` table
-- `employees` table
-- `items` table
-- `sales` table
-- `rentals` table
-- `returns` table
-- `transactions` table (audit)
+**Key Achievements**:
+- Designed normalized database schema (11 tables)
+- Created DDL scripts with constraints and indexes
+- Documented data migration strategy
+- Defined repository interfaces
+- Improved data integrity with foreign keys and constraints
 
 ---
 
-### ⏳ Phase 6: Forward Engineering (PENDING)
+### ✅ Phase 6: Forward Engineering (COMPLETED - Design Phase)
 
-**Status**: Not Started  
-**Planned Start**: After Data Restructuring
+**Status**: 100% Complete (Architecture Design)  
+**Date Completed**: 2025-11-28
 
-**Planned Technology Stack**:
+**Deliverables**:
+- ✅ `docs/forward-engineering.md` - Complete architecture plan
+- ✅ Technology stack selection and rationale
+- ✅ Layered architecture design
+- ✅ Project structure for backend and frontend
+- ✅ RESTful API design
+- ✅ Testing and deployment strategy
+
+**Technology Stack**:
 - **Backend**: Spring Boot (Java)
 - **Frontend**: React (TypeScript)
 - **Database**: PostgreSQL
 - **Build**: Maven (backend), npm (frontend)
 
-**Planned Architecture**:
-- Layered architecture (Presentation, Business, Data)
-- RESTful API
+**Architecture**:
+- Layered architecture (Presentation, API, Business, Data)
+- RESTful API design
 - Repository pattern
 - Dependency injection
-- Comprehensive testing
+- Comprehensive testing strategy
 
 ---
 
