@@ -1,0 +1,9 @@
+com\sgtech\pos\integration\SaleIntegrationTest.class
+com\sgtech\pos\service\RentalServiceTest.class
+com\sgtech\pos\service\ReturnServiceTest.class
+com\sgtech\pos\repository\CustomerRepositoryTest.class
+com\sgtech\pos\service\EmployeeServiceTest.class
+com\sgtech\pos\service\SaleServiceTest.class
+com\sgtech\pos\controller\AuthControllerTest.class
+com\sgtech\pos\repository\ItemRepositoryTest.class
+com\sgtech\pos\service\InventoryServiceTest.class
