@@ -33,7 +33,7 @@ public class SaleServiceTest {
     private SaleRepository saleRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     private Employee employee;
     private Item item1;

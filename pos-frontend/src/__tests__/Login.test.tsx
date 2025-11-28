@@ -1,10 +1,15 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
 import Login from '../pages/Login';
 import { AuthProvider } from '../context/AuthContext';
 import * as authService from '../services/authService';
 
-jest.mock('../services/authService');
+vi.mock('../services/authService', () => ({
+  authService: {
+    login: vi.fn()
+  }
+}));
 
 const renderLogin = () => {
   return render(
@@ -18,7 +23,7 @@ const renderLogin = () => {
 
 describe('Login Component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('renders login form', () => {
@@ -37,7 +42,7 @@ describe('Login Component', () => {
       position: 'Cashier'
     };
 
-    (authService.authService.login as jest.Mock).mockResolvedValue(mockLoginResponse);
+    vi.mocked(authService.authService.login).mockResolvedValue(mockLoginResponse);
 
     renderLogin();
 
@@ -55,7 +60,7 @@ describe('Login Component', () => {
   });
 
   test('displays error on login failure', async () => {
-    (authService.authService.login as jest.Mock).mockRejectedValue(
+    vi.mocked(authService.authService.login).mockRejectedValue(
       new Error('Invalid credentials')
     );
 

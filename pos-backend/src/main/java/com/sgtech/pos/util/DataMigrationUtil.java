@@ -32,7 +32,8 @@ public class DataMigrationUtil {
     @Autowired
     private CouponRepository couponRepository;
     
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder = 
+        new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     
     @Transactional
     public void migrateEmployees(String filePath) throws Exception {
