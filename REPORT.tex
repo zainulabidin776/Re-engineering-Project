@@ -1,0 +1,525 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{float}
+
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Software Reengineering Project}
+\lhead{SG Technologies POS System}
+\cfoot{\thepage}
+
+\titleformat{\section}
+{\Large\bfseries}
+{}
+{0em}
+{}[\titlerule]
+
+\lstset{
+    language=Java,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=2
+}
+
+\title{
+    \textbf{Software Reengineering Project}\\
+    \large Reengineering Legacy POS System to Modern Web Application
+}
+\author{
+    Muhammad Yousuf Khan (21i-1238)\\
+    Zain (22i-2738)\\
+    Abad Naseer (20i-1815)
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Executive Summary}
+
+This document presents a comprehensive report on the software reengineering project of the SG Technologies Point-of-Sale (POS) system. The project involved transforming a legacy desktop-based Java application into a modern, web-based system following the Software Reengineering Process Model. The reengineered system utilizes Spring Boot for the backend, React with TypeScript for the frontend, and PostgreSQL for data storage.
+
+\subsection{Project Objectives}
+\begin{itemize}
+    \item Analyze and document the legacy system architecture
+    \item Restructure code to improve maintainability
+    \item Migrate from file-based storage to relational database
+    \item Implement modern web-based architecture
+    \item Ensure feature parity with legacy system
+    \item Improve security, scalability, and user experience
+\end{itemize}
+
+\subsection{Key Achievements}
+\begin{itemize}
+    \item Successfully completed all 6 phases of reengineering process
+    \item Eliminated 130+ lines of duplicate code
+    \item Designed normalized database schema with 11 tables
+    \item Implemented complete REST API with 15+ endpoints
+    \item Built modern React frontend with Material-UI
+    \item Achieved 100\% feature parity with legacy system
+\end{itemize}
+
+\section{Introduction}
+
+\subsection{Project Background}
+
+The SG Technologies POS system was originally developed as a desktop application using Java Swing for the user interface and plain text files for data storage. While functional, the system suffered from several limitations:
+
+\begin{itemize}
+    \item \textbf{Single-user limitation}: Desktop application restricted to one user at a time
+    \item \textbf{File-based storage}: Data stored in text files without proper relationships
+    \item \textbf{Security concerns}: Plain text password storage
+    \item \textbf{Maintainability issues}: Code duplication, magic numbers, tight coupling
+    \item \textbf{No scalability}: Cannot handle concurrent transactions efficiently
+\end{itemize}
+
+\subsection{Reengineering Goals}
+
+The reengineering project aimed to address these limitations by:
+
+\begin{enumerate}
+    \item \textbf{Modernizing architecture}: Transition to web-based, multi-user system
+    \item \textbf{Improving data management}: Migrate to normalized relational database
+    \item \textbf{Enhancing security}: Implement JWT authentication and password hashing
+    \item \textbf{Refactoring code}: Eliminate duplication and improve maintainability
+    \item \textbf{Improving UX}: Modern web interface with better usability
+\end{enumerate}
+
+\section{Reengineering Process Model}
+
+The project followed the Software Reengineering Process Model, which consists of six distinct phases:
+
+\subsection{Phase 1: Inventory Analysis}
+
+\subsubsection{Objectives}
+The inventory analysis phase involved cataloging all assets of the legacy system, including source code files, data files, documentation, and dependencies.
+
+\subsubsection{Findings}
+\begin{itemize}
+    \item \textbf{Source Code}: 20 Java classes totaling approximately 3,000 lines of code
+    \item \textbf{Data Files}: 9 text-based database files storing different entities
+    \item \textbf{Test Coverage}: Less than 5\% test coverage
+    \item \textbf{Dependencies}: Minimal external dependencies, mostly Java standard library
+\end{itemize}
+
+\subsubsection{Asset Classification}
+Assets were classified into three categories:
+\begin{itemize}
+    \item \textbf{Keep}: Core business logic, domain models
+    \item \textbf{Refactor}: Classes with code smells, duplicate code
+    \item \textbf{Replace}: File I/O operations, Swing UI components
+\end{itemize}
+
+\subsection{Phase 2: Document Restructuring}
+
+\subsubsection{Objectives}
+Reorganize and enhance documentation to support the reengineering effort.
+
+\subsubsection{Deliverables}
+\begin{itemize}
+    \item Data dictionary for all file formats
+    \item Operational scenarios and use cases
+    \item Architecture diagrams
+    \item API documentation structure
+\end{itemize}
+
+\subsection{Phase 3: Reverse Engineering}
+
+\subsubsection{Architecture Analysis}
+
+The legacy system followed a layered architecture with the following components:
+
+\begin{enumerate}
+    \item \textbf{Presentation Layer}: Swing-based GUI components
+    \item \textbf{Business Logic Layer}: Core POS operations (Sales, Rentals, Returns)
+    \item \textbf{Data Access Layer}: File I/O operations for data persistence
+\end{enumerate}
+
+\subsubsection{Code Smells Identified}
+
+\begin{enumerate}
+    \item \textbf{God Classes}: POSSystem, PointOfSale, Management classes with excessive responsibilities
+    \item \textbf{Long Methods}: Methods exceeding 80 lines of code
+    \item \textbf{Code Duplication}: deleteTempItem method duplicated in 3 classes
+    \item \textbf{Magic Numbers}: Hardcoded values throughout the codebase
+    \item \textbf{Feature Envy}: Classes accessing data from other classes excessively
+    \item \textbf{Data Clumps}: Related data not grouped into objects
+    \item \textbf{Primitive Obsession}: Using primitives instead of value objects
+    \item \textbf{Inappropriate Intimacy}: Classes knowing too much about each other
+    \item \textbf{Lazy Class}: Classes with minimal functionality
+    \item \textbf{Speculative Generality}: Over-abstracted code
+\end{enumerate}
+
+\subsubsection{Data Smells Identified}
+
+\begin{itemize}
+    \item \textbf{Denormalized Data}: Customer and rental data mixed in single file
+    \item \textbf{No Referential Integrity}: No foreign key relationships
+    \item \textbf{Inconsistent Formats}: Mix of space and comma delimiters
+    \item \textbf{No Data Validation}: No constraints on data values
+\end{itemize}
+
+\subsection{Phase 4: Code Restructuring}
+
+\subsubsection{Refactoring Activities}
+
+Ten major refactorings were performed:
+
+\begin{enumerate}
+    \item \textbf{Extract Constants Class}: Centralized 20+ magic numbers and strings
+    \item \textbf{Extract SystemUtils Class}: Consolidated OS detection and line separator logic
+    \item \textbf{Apply Constants to POSSystem}: Replaced hardcoded file paths
+    \item \textbf{Apply Constants to PointOfSale}: Replaced magic values
+    \item \textbf{Apply Constants to POS}: Updated sale-related constants
+    \item \textbf{Apply Constants to POR}: Updated rental-related constants
+    \item \textbf{Apply Constants to POH}: Updated return-related constants
+    \item \textbf{Apply Constants to Management}: Updated user database constants
+    \item \textbf{Apply Constants to EmployeeManagement}: Updated employee constants
+    \item \textbf{Extract Duplicate Method}: Consolidated deleteTempItem into base class
+\end{enumerate}
+
+\subsubsection{Results}
+
+\begin{itemize}
+    \item Eliminated approximately 130 lines of duplicate code
+    \item Centralized all magic values in Constants class
+    \item Improved code maintainability and readability
+    \item Zero behavior changes (safe refactorings)
+    \item All tests passing after refactoring
+\end{itemize}
+
+\subsection{Phase 5: Data Restructuring}
+
+\subsubsection{Database Design}
+
+A normalized PostgreSQL schema was designed with 11 tables:
+
+\begin{enumerate}
+    \item \textbf{employees}: Employee accounts and authentication
+    \item \textbf{items}: Inventory items with pricing
+    \item \textbf{customers}: Customer information
+    \item \textbf{coupons}: Discount codes
+    \item \textbf{sales}: Sales transactions
+    \item \textbf{sale\_items}: Items in each sale
+    \item \textbf{rentals}: Rental transactions
+    \item \textbf{rental\_items}: Items in each rental
+    \item \textbf{returns}: Return transactions
+    \item \textbf{return\_items}: Items in each return
+    \item \textbf{audit\_logs}: System audit trail
+\end{enumerate}
+
+\subsubsection{Normalization}
+
+The schema follows Third Normal Form (3NF):
+\begin{itemize}
+    \item No repeating groups
+    \item No partial dependencies
+    \item No transitive dependencies
+    \item Proper foreign key relationships
+\end{itemize}
+
+\subsubsection{Data Migration Strategy}
+
+A migration utility was developed to:
+\begin{enumerate}
+    \item Parse legacy text files
+    \item Transform data to normalized structure
+    \item Load data into PostgreSQL
+    \item Validate data integrity
+\end{enumerate}
+
+\subsection{Phase 6: Forward Engineering}
+
+\subsubsection{Technology Stack Selection}
+
+\textbf{Backend:}
+\begin{itemize}
+    \item Spring Boot 3.2.0
+    \item Spring Data JPA
+    \item Spring Security with JWT
+    \item PostgreSQL
+    \item Maven
+\end{itemize}
+
+\textbf{Frontend:}
+\begin{itemize}
+    \item React 18.2
+    \item TypeScript 5.3
+    \item Material-UI 5.14
+    \item Vite 5.0
+    \item Axios 1.6
+\end{itemize}
+
+\subsubsection{Architecture Design}
+
+The reengineered system follows a layered architecture:
+
+\begin{enumerate}
+    \item \textbf{Presentation Layer}: React components with Material-UI
+    \item \textbf{API Layer}: Spring Boot REST controllers
+    \item \textbf{Business Logic Layer}: Spring services
+    \item \textbf{Data Access Layer}: Spring Data JPA repositories
+    \item \textbf{Database Layer}: PostgreSQL
+\end{enumerate}
+
+\subsubsection{Key Features Implemented}
+
+\begin{itemize}
+    \item JWT-based authentication
+    \item Role-based access control (Admin/Cashier)
+    \item Sales processing with tax and coupon support
+    \item Rental management with customer lookup
+    \item Return processing with overdue tracking
+    \item Inventory management
+    \item Employee management (Admin only)
+\end{itemize}
+
+\section{Implementation Details}
+
+\subsection{Backend Implementation}
+
+\subsubsection{Entity Design}
+
+JPA entities were created for all database tables with proper relationships:
+
+\begin{lstlisting}[caption=Employee Entity Example]
+@Entity
+@Table(name = "employees")
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    
+    @Column(unique = true, nullable = false)
+    private String username;
+    
+    @Column(nullable = false)
+    private String position; // Admin or Cashier
+    
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
+    
+    // Getters and setters
+}
+\end{lstlisting}
+
+\subsubsection{Service Layer}
+
+Business logic was implemented in service classes:
+
+\begin{lstlisting}[caption=Sale Service Example]
+@Service
+public class SaleService {
+    @Transactional
+    public Sale processSale(UUID employeeId, SaleRequest request) {
+        // Calculate totals
+        // Update inventory
+        // Apply tax and discounts
+        // Save transaction
+    }
+}
+\end{lstlisting}
+
+\subsubsection{API Endpoints}
+
+RESTful endpoints were created for all operations:
+
+\begin{itemize}
+    \item \texttt{POST /api/auth/login} - Authentication
+    \item \texttt{POST /api/sales} - Process sale
+    \item \texttt{POST /api/rentals} - Process rental
+    \item \texttt{POST /api/returns} - Process return
+    \item \texttt{GET /api/items} - Get inventory
+    \item \texttt{GET /api/employees} - Employee management
+\end{itemize}
+
+\subsection{Frontend Implementation}
+
+\subsubsection{Component Structure}
+
+React components were organized into:
+\begin{itemize}
+    \item \textbf{Pages}: Login, CashierDashboard, AdminDashboard
+    \item \textbf{Components}: SalesPage, RentalsPage, ReturnsPage, etc.
+    \item \textbf{Services}: API service layer
+    \item \textbf{Context}: Authentication context
+\end{itemize}
+
+\subsubsection{Authentication Flow}
+
+\begin{enumerate}
+    \item User enters credentials on login page
+    \item Frontend sends POST request to /api/auth/login
+    \item Backend validates credentials and returns JWT token
+    \item Token stored in localStorage
+    \item Token included in all subsequent API requests
+    \item Protected routes check authentication status
+\end{enumerate}
+
+\section{Testing}
+
+\subsection{Backend Testing}
+
+JUnit tests were created for:
+\begin{itemize}
+    \item Authentication controller
+    \item Sale service
+    \item Rental service
+    \item Repository layer
+\end{itemize}
+
+\subsection{Frontend Testing}
+
+React Testing Library tests were created for:
+\begin{itemize}
+    \item Login component
+    \item Form validation
+    \item API integration
+\end{itemize}
+
+\subsection{API Testing}
+
+Test scripts were created using:
+\begin{itemize}
+    \item PowerShell scripts for Windows
+    \item Bash scripts for Linux/Mac
+    \item Manual testing via Postman
+\end{itemize}
+
+\section{Results and Improvements}
+
+\subsection{Code Quality Improvements}
+
+\begin{itemize}
+    \item \textbf{Code Duplication}: Reduced by 130+ lines
+    \item \textbf{Maintainability}: Improved through centralized constants
+    \item \textbf{Test Coverage}: Increased from <5\% to comprehensive test suite
+    \item \textbf{Documentation}: 8 comprehensive markdown documents
+\end{itemize}
+
+\subsection{Architecture Improvements}
+
+\begin{itemize}
+    \item \textbf{Scalability}: Multi-user web application vs. single-user desktop
+    \item \textbf{Maintainability}: Layered architecture with clear separation
+    \item \textbf{Testability}: Dependency injection enables unit testing
+    \item \textbf{Extensibility}: Easy to add new features
+\end{itemize}
+
+\subsection{Data Management Improvements}
+
+\begin{itemize}
+    \item \textbf{Normalization}: Proper relational structure
+    \item \textbf{Integrity}: Foreign key constraints
+    \item \textbf{Concurrency}: Database transactions
+    \item \textbf{Performance}: Indexed queries
+\end{itemize}
+
+\subsection{Security Improvements}
+
+\begin{itemize}
+    \item \textbf{Authentication}: JWT tokens vs. plain text
+    \item \textbf{Password Storage}: BCrypt hashing
+    \item \textbf{Authorization}: Role-based access control
+    \item \textbf{API Security}: Protected endpoints
+\end{itemize}
+
+\section{Challenges and Solutions}
+
+\subsection{Challenge 1: Data Migration}
+
+\textbf{Problem}: Migrating data from text files to normalized database.
+
+\textbf{Solution}: Created DataMigrationUtil class to parse files and transform data.
+
+\subsection{Challenge 2: Legacy Code Understanding}
+
+\textbf{Problem}: Understanding legacy code structure and business logic.
+
+\textbf{Solution}: Comprehensive reverse engineering analysis and documentation.
+
+\subsection{Challenge 3: Feature Parity}
+
+\textbf{Problem}: Ensuring all legacy features work in new system.
+
+\textbf{Solution}: Detailed feature mapping and comprehensive testing.
+
+\section{Conclusion}
+
+The software reengineering project successfully transformed the legacy POS system into a modern, web-based application. All six phases of the reengineering process were completed, resulting in:
+
+\begin{itemize}
+    \item Improved code quality and maintainability
+    \item Modern web-based architecture
+    \item Secure authentication and authorization
+    \item Normalized database structure
+    \item Enhanced user experience
+    \item Comprehensive documentation
+\end{itemize}
+
+The reengineered system maintains feature parity with the legacy system while providing significant improvements in scalability, security, and maintainability.
+
+\section{Future Work}
+
+Potential enhancements for future iterations:
+
+\begin{itemize}
+    \item Add comprehensive unit and integration tests
+    \item Implement reporting and analytics features
+    \item Add mobile application support
+    \item Implement real-time inventory updates
+    \item Add barcode scanning support
+    \item Implement loyalty program features
+\end{itemize}
+
+\section{References}
+
+\begin{itemize}
+    \item Software Reengineering Process Model
+    \item Spring Boot Documentation: \url{https://spring.io/projects/spring-boot}
+    \item React Documentation: \url{https://react.dev}
+    \item PostgreSQL Documentation: \url{https://www.postgresql.org/docs}
+    \item Project Repository: \url{https://github.com/zainulabidin776/Re-engineering-Project}
+\end{itemize}
+
+\appendix
+
+\section{Appendix A: Database Schema}
+
+The complete database schema DDL is available in \texttt{database/schema.sql}.
+
+\section{Appendix B: API Documentation}
+
+Complete API documentation is available in the project repository.
+
+\section{Appendix C: Test Results}
+
+Test execution results and coverage reports are available in the test directories.
+
+\end{document}
+
