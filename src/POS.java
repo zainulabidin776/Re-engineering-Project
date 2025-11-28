@@ -8,41 +8,8 @@ public class POS extends PointOfSale {
   public POS(){};
   
   public void deleteTempItem(int id){
-    try{
-      String temp = Constants.NEW_TEMP_FILE;
-      if(SystemUtils.isWindows()){
-        //temp = "..\\Database\\newTemp.txt"; 
-      }
-      File tempF = new File(temp);
-      FileReader fileR = new FileReader(tempFile);
-      BufferedReader reader = new BufferedReader(fileR);
-      BufferedWriter writer = new BufferedWriter(new FileWriter(tempF));
-      String type= reader.readLine();
-      writer.write(type);
-      writer.write(SystemUtils.getLineSeparator());
-      for (int i =0; i<transactionItem.size();i++){
-        if (transactionItem.get(i).getItemID()!=id){
-          writer.write(transactionItem.get(i).getItemID() +" "+ transactionItem.get(i).getAmount());
-          writer.write(SystemUtils.getLineSeparator());
-        }
-      }
-      fileR.close();
-      writer.close(); 
-      reader.close(); 
-      File file = new File(tempFile);
-      file.delete();
-      tempF.renameTo(new File(tempFile));
-
-    }
-    catch(FileNotFoundException ex) {
-      System.out.println(
-                         "Unable to open file 'temp'"); 
-    }
-    catch(IOException ex) {
-      System.out.println(
-                         "Error reading file 'temp'");  
-    }
-    
+    // POS doesn't have phone number in temp file
+    deleteTempItemHelper(id, false);
   }
   
   public double endPOS(String textFile)

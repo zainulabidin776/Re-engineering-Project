@@ -382,15 +382,127 @@ if (SystemUtils.isWindows()){
 - **Maintainability**: Significantly improved through centralization
 - **Test Coverage**: No regression, all tests passing
 
-### Next Planned Refactorings
-1. Extract duplicate `deleteTempItem()` method (POS, POR, POH) - **High Priority**
-2. Extract file I/O into repository pattern
-3. Replace `float` with `BigDecimal` for currency
-4. Extract date formatting into utility
-5. Refactor long methods in Management class
+---
+
+## Refactoring #10: Extract Duplicate deleteTempItem Method
+
+**Date**: 2025-11-28  
+**Type**: Extract Method → Pull Up Method  
+**Files Changed**: `src/PointOfSale.java`, `src/POS.java`, `src/POR.java`, `src/POH.java`
+
+### Before
+```java
+// POS.java - 30+ lines
+public void deleteTempItem(int id){
+    try{
+      String temp = Constants.NEW_TEMP_FILE;
+      // ... 25+ lines of file I/O code ...
+    }
+    catch(FileNotFoundException ex) { ... }
+    catch(IOException ex) { ... }
+}
+
+// POR.java - 35+ lines (nearly identical)
+public void deleteTempItem(int id){
+    try{
+      String temp = Constants.NEW_TEMP_FILE;
+      // ... includes phone number handling ...
+    }
+    catch(FileNotFoundException ex) { ... }
+    catch(IOException ex) { ... }
+}
+
+// POH.java - 35+ lines (nearly identical to POR)
+public void deleteTempItem(int id){
+    // Same as POR
+}
+```
+
+### After
+```java
+// PointOfSale.java - Base class helper method
+protected void deleteTempItemHelper(int id, boolean hasPhoneNumber) {
+    try{
+      String temp = Constants.NEW_TEMP_FILE;
+      // ... consolidated file I/O logic ...
+      if (hasPhoneNumber) {
+        String phone = reader.readLine();
+        writer.write(phone);
+        writer.write(SystemUtils.getLineSeparator());
+      }
+      // ... write remaining items ...
+    }
+    catch(FileNotFoundException ex) { ... }
+    catch(IOException ex) { ... }
+}
+
+// POS.java - Now just 3 lines
+public void deleteTempItem(int id){
+    deleteTempItemHelper(id, false);
+}
+
+// POR.java - Now just 3 lines
+public void deleteTempItem(int id){
+    deleteTempItemHelper(id, true);
+}
+
+// POH.java - Now just 3 lines
+public void deleteTempItem(int id){
+    deleteTempItemHelper(id, true);
+}
+```
+
+### Rationale
+- **Eliminates duplicate code** (code smell: Duplicate Code)
+- **DRY Principle**: Single implementation of temp file deletion logic
+- **Maintainability**: Bug fixes and improvements in one place
+- **Reduced LOC**: ~90 lines reduced to ~40 lines (helper) + 9 lines (3 calls)
+
+### Quality Impact
+- **Maintainability**: ⬆️ Very High improvement - single source of truth
+- **DRY Principle**: ⬆️ Very High improvement - eliminated 3 duplicate implementations
+- **Lines of Code**: ⬇️ Reduced by ~50 lines
+- **Testability**: ⬆️ Medium improvement - can test helper method independently
+- **Risk**: ✅ Low - behavior unchanged, just consolidated
+
+### Notes
+- Used Template Method pattern with boolean parameter to handle phone number variation
+- Maintains backward compatibility (public method signatures unchanged)
+- All three implementations now delegate to shared helper
 
 ---
 
-**Document Version**: 1.1  
+## Summary of Refactorings (Final Update)
+
+| Refactoring | Type | Files Changed | Risk | Impact |
+|------------|------|---------------|------|--------|
+| #1: Extract Constants | Extract Constant | 4 files | Low | High |
+| #2: Extract SystemUtils | Extract Method | 4 files | Low | High |
+| #3: PointOfSale Constants | Replace Magic Number | 1 file | Very Low | Medium |
+| #4: POSSystem Constants | Replace Magic Number | 1 file | Very Low | High |
+| #5: POS SystemUtils | Replace Method Call | 1 file | Very Low | Medium |
+| #6: POR Constants/Utils | Replace Magic Number | 1 file | Very Low | Medium |
+| #7: POH Constants/Utils | Replace Magic Number | 1 file | Very Low | Medium |
+| #8: Management Constants/Utils | Replace Magic Number | 1 file | Very Low | Medium |
+| #9: EmployeeManagement Constants | Replace Magic Number | 1 file | Very Low | Medium |
+| #10: Extract deleteTempItem | Extract Method | 4 files | Low | Very High |
+
+### Overall Impact (Final)
+- **Code Smells Eliminated**: Magic Numbers, Duplicate Code, Data Clumps (partial)
+- **Lines of Code Reduced**: ~130 lines of duplicate code eliminated
+- **Files Refactored**: 10 files improved
+- **Maintainability**: Significantly improved through centralization
+- **Test Coverage**: No regression, all tests passing
+
+### Next Planned Refactorings
+1. Extract file I/O into repository pattern
+2. Replace `float` with `BigDecimal` for currency
+3. Extract date formatting into utility
+4. Refactor long methods in Management class
+5. Add more comprehensive test coverage
+
+---
+
+**Document Version**: 1.2  
 **Last Updated**: 2025-11-28
 

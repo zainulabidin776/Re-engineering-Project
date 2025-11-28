@@ -233,6 +233,56 @@ abstract class PointOfSale {
   public List <Item> getCart(){return transactionItem;}
   public int getCartSize(){return transactionItem.size();}
   
+  /**
+   * Helper method to delete an item from temp file
+   * Handles common file operations for POS, POR, and POH
+   * @param id Item ID to remove
+   * @param hasPhoneNumber true if temp file contains phone number (POR/POH), false for POS
+   */
+  protected void deleteTempItemHelper(int id, boolean hasPhoneNumber) {
+    try{
+      String temp = Constants.NEW_TEMP_FILE;
+      if(SystemUtils.isWindows()){
+        //temp = "..\\Database\\newTemp.txt"; 
+      }
+      File tempF = new File(temp);
+      FileReader fileR = new FileReader(tempFile);
+      BufferedReader reader = new BufferedReader(fileR);
+      BufferedWriter writer = new BufferedWriter(new FileWriter(tempF));
+      String type = reader.readLine();
+      writer.write(type);
+      writer.write(SystemUtils.getLineSeparator());
+      
+      // Handle phone number if present (POR/POH)
+      if (hasPhoneNumber) {
+        String phone = reader.readLine();
+        writer.write(phone);
+        writer.write(SystemUtils.getLineSeparator());
+      }
+      
+      // Write remaining items (excluding the one to delete)
+      for (int i = 0; i < transactionItem.size(); i++){
+        if (transactionItem.get(i).getItemID() != id){
+          writer.write(transactionItem.get(i).getItemID() + " " + transactionItem.get(i).getAmount());
+          writer.write(SystemUtils.getLineSeparator());
+        }
+      }
+      
+      fileR.close();
+      writer.close(); 
+      reader.close(); 
+      File file = new File(tempFile);
+      file.delete();
+      tempF.renameTo(new File(tempFile));
+    }
+    catch(FileNotFoundException ex) {
+      System.out.println("Unable to open file 'temp'"); 
+    }
+    catch(IOException ex) {
+      System.out.println("Error reading file 'temp'");  
+    }
+  }
+  
   public abstract double endPOS(String textFile);
   public abstract void deleteTempItem(int id);
   public abstract void retrieveTemp(String textFile);
