@@ -3,7 +3,7 @@
 # End-to-End Test Script for POS System
 # Tests complete user workflows
 
-BASE_URL="http://localhost:8080/api"
+BASE_URL="http://localhost:8081/api"
 TOKEN=""
 EMPLOYEE_ID=""
 

@@ -1,7 +1,7 @@
 # PowerShell API Testing Script for POS System
 # This script tests all major API endpoints
 
-$BaseUrl = "http://localhost:8080/api"
+$BaseUrl = "http://localhost:8081/api"
 $Token = ""
 
 Write-Host "=========================================" -ForegroundColor Cyan

@@ -1,7 +1,7 @@
 # Comprehensive Integration Test Script for POS System
 # Tests complete workflows end-to-end
 
-$BaseUrl = "http://localhost:8080/api"
+$BaseUrl = "http://localhost:8081/api"
 $Token = ""
 $EmployeeId = ""
 
