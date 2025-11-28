@@ -43,3 +43,8 @@ npm test
 ✅ **All test framework issues fixed**
 ✅ **Ready for testing**
 
+In Cursor settings (Profiles → PowerShell), add this to the startup script (copy it exactly):
+
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot"
+$env:MAVEN_HOME = "C:\apache-maven-3.9.11"
+$env:PATH = "$env:JAVA_HOME\bin;$env:MAVEN_HOME\bin;$env:PATH"
