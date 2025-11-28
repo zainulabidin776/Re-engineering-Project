@@ -2,9 +2,9 @@
 import java.util.*;
 import java.io.*;
 public class EmployeeManagement{
-  String temp ="Database/newEmployeeDatabase.txt";
+  String temp = Constants.DATABASE_DIR + "newEmployeeDatabase.txt";
   public boolean unixOS = true; 
-  public static String employeeDatabase = "Database/employeeDatabase.txt";
+  public static String employeeDatabase = Constants.EMPLOYEE_DATABASE;
   public List<Employee> employees = new ArrayList<Employee>();
   public EmployeeManagement(){}
   
@@ -159,7 +159,7 @@ public class EmployeeManagement{
   
   
   private void readFile(){
-    if (System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+    if (SystemUtils.isWindows()){
       //unixOS = false; 
       //employeeDatabase = "..\\Database\\employeeDatabase.txt";
     }

@@ -10,8 +10,8 @@ public class POR extends PointOfSale {
   };
   public void deleteTempItem(int id){
     try{
-      String temp = "Database/newTemp.txt";
-      if(System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+      String temp = Constants.NEW_TEMP_FILE;
+      if(SystemUtils.isWindows()){
         //temp = "..\\Database\\newTemp.txt"; 
       }
       File tempF = new File(temp);
@@ -23,13 +23,13 @@ public class POR extends PointOfSale {
       //this.phoneNum = Long.parseLong(phone);
       //System.out.println(this.phoneNum);
       writer.write(type);
-      writer.write(System.getProperty("line.separator"));
+      writer.write(SystemUtils.getLineSeparator());
       writer.write(phone);
-      writer.write(System.getProperty("line.separator"));
+      writer.write(SystemUtils.getLineSeparator());
       for (int i =0; i<transactionItem.size();i++){
         if (transactionItem.get(i).getItemID()!=id){
           writer.write(transactionItem.get(i).getItemID() +" "+ transactionItem.get(i).getAmount());
-          writer.write(System.getProperty( "line.separator" ));
+          writer.write(SystemUtils.getLineSeparator());
         }
         
       }

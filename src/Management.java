@@ -5,16 +5,16 @@ import java.text.*;
 
 public class Management {
  
- private static String userDatabase = "Database/userDatabase.txt";
+ private static String userDatabase = Constants.USER_DATABASE;
  
  
  public Management(){
    
-   if (System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+   if (SystemUtils.isWindows()){
      //userDatabase="..\\Database\\userDatabase.txt";
    }
    else{
-     userDatabase= "Database/userDatabase.txt";
+     userDatabase= Constants.USER_DATABASE;
    }
    
  }
@@ -68,7 +68,7 @@ public class Management {
    long nextPh = 0;
    boolean outstandingReturns = false;
    
-   SimpleDateFormat formatter =  new SimpleDateFormat("MM/dd/yy");
+   SimpleDateFormat formatter =  new SimpleDateFormat(Constants.DATE_FORMAT_SHORT);
    List<ReturnItem> returnList = new ArrayList<ReturnItem>(); //this list will store all items to be used in this sale
    
    String thisReturnDate = null;
@@ -202,7 +202,7 @@ public class Management {
   long nextPhone = 0;
   List <String> fileList = new ArrayList<String>();
   Date date = new Date();
-     Format formatter = new SimpleDateFormat("MM/dd/yy");
+     Format formatter = new SimpleDateFormat(Constants.DATE_FORMAT_SHORT);
      String dateFormat = formatter.format(date);
      boolean ableToRead = false;
   
@@ -283,7 +283,7 @@ public class Management {
   List <String> fileList = new ArrayList<String>();
   String modifiedLine;
   Date date = new Date();
-     Format formatter = new SimpleDateFormat("MM/dd/yy");
+     Format formatter = new SimpleDateFormat(Constants.DATE_FORMAT_SHORT);
      String dateFormat = formatter.format(date);
      boolean ableToRead = false;
   

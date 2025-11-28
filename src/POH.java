@@ -28,8 +28,8 @@ public class POH extends PointOfSale
  
   public void deleteTempItem(int id){
       try{
-        String temp = "Database/newTemp.txt";
-        if(System.getProperty("os.name").startsWith("W")||System.getProperty("os.name").startsWith("w")){
+        String temp = Constants.NEW_TEMP_FILE;
+        if(SystemUtils.isWindows()){
          // temp = "..\\Database\\newTemp.txt"; 
         }
         File tempF = new File(temp);
@@ -40,13 +40,13 @@ public class POH extends PointOfSale
         String phone;
         phone=reader.readLine();
         writer.write(type);
-        writer.write(System.getProperty("line.separator"));
+        writer.write(SystemUtils.getLineSeparator());
         writer.write(phone);
-        writer.write(System.getProperty("line.separator"));
+        writer.write(SystemUtils.getLineSeparator());
         for (int i =0; i<transactionItem.size();i++){
           if (transactionItem.get(i).getItemID()!=id){
             writer.write(transactionItem.get(i).getItemID() +" "+ transactionItem.get(i).getAmount());
-            writer.write(System.getProperty( "line.separator" ));
+            writer.write(SystemUtils.getLineSeparator());
           }
           
         }
@@ -72,17 +72,17 @@ public class POH extends PointOfSale
       //detectSystem();
         if(returnSale==true){
                 try{
-      String t = "Database/returnSale.txt";
+      String t = Constants.RETURN_SALE_RECORD;
       
       FileWriter fw2 = new FileWriter(t,true);
       BufferedWriter bw2 = new BufferedWriter(fw2);
-      bw2.write(System.getProperty( "line.separator" ));
+      bw2.write(SystemUtils.getLineSeparator());
       for(int i=0;i<transactionItem.size();i++){
        String log=Integer.toString(transactionItem.get(i).getItemID())+" "+transactionItem.get(i).getItemName()+" "+
                         Integer.toString(transactionItem.get(i).getAmount())+" "+
                         Double.toString(transactionItem.get(i).getPrice()*transactionItem.get(i).getAmount());
        bw2.write(log);
-      bw2.write(System.getProperty( "line.separator" ));
+      bw2.write(SystemUtils.getLineSeparator());
       }
       bw2.newLine();
       bw2.close();
