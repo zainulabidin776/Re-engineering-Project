@@ -79,3 +79,77 @@ npm test
 
 All compilation errors should now be resolved.
 
+
+
+Step 1: Set JAVA_HOME correctly
+
+In Cursor PowerShell, run:
+
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot"
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+
+
+This prepends Java’s bin folder to PATH, which Maven needs.
+
+Step 2: Check it
+echo $env:JAVA_HOME
+java -version
+mvn --version
+
+
+echo $env:JAVA_HOME → should print the Java path.
+
+java -version → should show Java 25.0.1.
+
+mvn --version → should now work.
+
+Step 3: Permanent fix for Cursor
+
+Open Cursor → Settings → Profiles → PowerShell.
+
+In Startup Script, add:
+
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot"
+$env:PATH = "$env:JAVA_HOME\bin;C:\apache-maven-3.9.11\bin;$env:PATH"
+
+
+Save and restart Cursor.
+
+✅ Now Maven and Java will always work in Cursor.
+
+---
+
+## Error: Spring Data JPA Query Method Name Issue
+
+**Date:** 2025-11-28
+
+**Error:**
+```
+No property 'equal' found for type 'Item'
+Failed to create query for method public abstract java.util.List 
+com.sgtech.pos.repository.ItemRepository.findByQuantityLessThanOrEqual(int)
+ApplicationContext failure threshold (1) exceeded
+```
+
+**Root Cause:**
+Spring Data JPA doesn't support the keyword `LessThanOrEqual` in method names. The parser was trying to find a property called "equal" instead of recognizing it as a comparison operator.
+
+**Solution:**
+Changed the repository method name from `findByQuantityLessThanOrEqual` to `findByQuantityLessThanEqual` (removed "Or" from the keyword).
+
+**Files Changed:**
+- `pos-backend/src/main/java/com/sgtech/pos/repository/ItemRepository.java`
+- `pos-backend/src/main/java/com/sgtech/pos/service/InventoryService.java`
+
+**Fix:**
+```java
+// Before (incorrect):
+List<Item> findByQuantityLessThanOrEqual(int maxQuantity);
+
+// After (correct):
+List<Item> findByQuantityLessThanEqual(int maxQuantity);
+```
+
+**Note:** Spring Data JPA supports keywords like `LessThan`, `LessThanEqual`, `GreaterThan`, `GreaterThanEqual`, but NOT `LessThanOrEqual` or `GreaterThanOrEqual`. For "or" conditions, use `@Query` annotation with custom JPQL.
+
+✅ All 30 tests should now pass after this fix.
