@@ -1,0 +1,42 @@
+/build/
+/bin/
+/target/
+
+/nbproject/private/
+
+# Compiled artifacts
+*.class
+*.jar
+*.war
+*.ear
+*.db
+
+# IDE/tooling
+.project
+.classpath
+.settings/
+*.pydevproject
+.metadata
+tmp/
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+/src/main/resources/rebel.xml
+.externalToolBuilders/
+*.launch
+.cproject
+.buildpath
+
+# OS-specific
+.DS_Store
+Thumbs.db
+Desktop.ini
+.Spotlight-V100
+.Trashes
+._*
+.svn
+
