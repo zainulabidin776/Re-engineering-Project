@@ -17,9 +17,18 @@ const theme = createTheme({
   },
 });
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute({ children, requiredPosition }: { children: React.ReactNode; requiredPosition?: string }) {
   const { user } = useAuth();
-  return user ? <>{children}</> : <Navigate to="/login" />;
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  if (requiredPosition && user.position !== requiredPosition) {
+    return <Navigate to={user.position === 'Admin' ? '/admin' : '/cashier'} replace />;
+  }
+  
+  return <>{children}</>;
 }
 
 function AppRoutes() {
@@ -27,24 +36,33 @@ function AppRoutes() {
   
   return (
     <Routes>
-      <Route path="/login" element={!user ? <Login /> : <Navigate to={user.position === 'Admin' ? '/admin' : '/cashier'} />} />
+      <Route 
+        path="/login" 
+        element={
+          user ? (
+            <Navigate to={user.position === 'Admin' ? '/admin' : '/cashier'} replace />
+          ) : (
+            <Login />
+          )
+        } 
+      />
       <Route 
         path="/cashier" 
         element={
-          <ProtectedRoute>
-            {user?.position === 'Cashier' ? <CashierDashboard /> : <Navigate to="/admin" />}
+          <ProtectedRoute requiredPosition="Cashier">
+            <CashierDashboard />
           </ProtectedRoute>
         } 
       />
       <Route 
         path="/admin" 
         element={
-          <ProtectedRoute>
-            {user?.position === 'Admin' ? <AdminDashboard /> : <Navigate to="/cashier" />}
+          <ProtectedRoute requiredPosition="Admin">
+            <AdminDashboard />
           </ProtectedRoute>
         } 
       />
-      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
@@ -54,7 +72,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <Router>
+        <Router
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
           <AppRoutes />
         </Router>
       </AuthProvider>
