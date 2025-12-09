@@ -28,11 +28,26 @@
 | UI forms `*_Interface` | Swing screens | Business modules | Direct file IO from UI events |
 
 ## 4. Dependency Highlights
-- File-based persistence hard-coded via relative paths across multiple classes → strong coupling, no abstraction.
-- UI classes directly instantiate transaction classes, bypassing service or repository layers.
-- Logging relies on appending to `Database/employeeLogfile.txt`, no rotation/security.
-- Build pipeline tied to NetBeans; no standalone Gradle/Maven definition yet.
-
+This mapping reveals how tight the coupling is between classes. The high degree of inter-dependency
+confirms the "Monolithic" structure.
+A. The UI Dependency Cycle (Tight Coupling)
+The User Interface classes do not just display data; they create and control the logic classes.
+ Register.java depends on Login_Interface
+ Login_Interface depends on POSSystem
+ Cashier_Interface depends on Transaction_Interface
+ Transaction_Interface depends on PointOfSale (and its subclasses POS, POR, POH)
+B. The Logic "Knot"
+The business logic classes are heavily intertwined, making isolation difficult.
+ POSSystem depends on Employee and EmployeeManagement.
+ Transaction_Interface depends on Management to check customer status during a sale.
+ POR (Rental Strategy) depends on Management to record the rental.
+ POH (Return Strategy) depends on ReturnItem and Management to calculate late fees. 
+C. Data Access Dependencies (The Bottleneck)
+Since there is no Database layer, multiple logic classes fight for access to the same text files.
+ Management.java reads/writes userDatabase.txt
+ Inventory.java reads/writes itemDatabase.txt
+ POS.java writes saleInvoiceRecord.txt
+ EmployeeManagement.java reads/writes employeeDatabase.txt
 ## 5. Asset Classification & Actions
 
 | Asset | Classification | Action |
